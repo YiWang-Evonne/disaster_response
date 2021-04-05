@@ -3,6 +3,7 @@ from bert import tokenization
 from sklearn.base import BaseEstimator, TransformerMixin
 import tensorflow_hub
 import tensorflow as tf
+import numpy as np
 """
 we could also use bert to encode our text. However, this is too slow to run with the resource we have.
 """
@@ -20,6 +21,14 @@ from tqdm import tqdm
 
 
 def mini_batch(all_segments, all_tokens, all_masks, batch_size):
+    """
+    create mini batches for encoding.
+    :param all_segments:
+    :param all_tokens:
+    :param all_masks:
+    :param batch_size:
+    :return:
+    """
     for i in range(0, len(all_segments), batch_size):
         curr_batch = {'input_type_ids': tf.convert_to_tensor(all_segments[i:i + batch_size],
                                                              np.int32, name='inputs/input_word_ids'),
@@ -43,6 +52,11 @@ class BertTransformer(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, texts):
+        """
+        take texts and then convert to embedding vectors.
+        :param texts:
+        :return:
+        """
         all_tokens = []
         all_masks = []
         all_segments = []
