@@ -2,7 +2,10 @@
 ### summary:
 This project is part of Udacity Data Scienist Non-Degree Program.
 
-By analyzing disaster data from Figure Eight to build a model for an API that classifies disaster messages. This project also provide a web UI to help classifying text message to different disaster response categories.
+The main goal is to build a model for an API that classifies disaster messages by analyzing disaster data from Figure Eight. This project also provide a web UI to help classifying text message to different disaster response categories.
+
+Currently, the champion model has an average accuracy of 0.76 across different response categories. 
+
 ### structure:
 
  ```bash
