@@ -1,4 +1,8 @@
-# disaster_reponse
+# disaster_response
+### summary:
+This project is part of Udacity Data Scienist Non-Degree Program.
+
+By analyzing disaster data from Figure Eight to build a model for an API that classifies disaster messages. This project also provide a web UI to help classifying text message to different disaster response categories.
 ### structure:
 
  ```bash

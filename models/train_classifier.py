@@ -14,7 +14,7 @@ from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 import pickle
-
+from sklearn.model_selection import GridSearchCV
 
 def load_data(database_filepath):
     """
@@ -66,6 +66,9 @@ def build_model():
     ])
     return model_pipeline
 
+def model_gridsearch(model, parameters):
+    cv = GridSearchCV(model, param_grid=parameters, verbose=3)
+    return cv
 
 def evaluate_model(model, X_test, Y_test, category_names):
     """
@@ -107,13 +110,20 @@ def main():
         model = build_model()
         
         print('Training model...')
-        model.fit(X_train, Y_train)
-        
+        # model.fit(X_train, Y_train)
+
+        parameters = {
+            'clf__n_estimators': [100, 400, 800],
+            #     'clf__criterion':["gini", "entropy"]
+        }
+        cv = model_gridsearch(model, parameters)
+        best_model_pipeline = cv.best_estimator_
+
         print('Evaluating model...')
-        evaluate_model(model, X_test, Y_test, category_names)
+        evaluate_model(best_model_pipeline, X_test, Y_test, category_names)
 
         print('Saving model...\n    MODEL: {}'.format(model_filepath))
-        save_model(model, model_filepath)
+        save_model(best_model_pipeline, model_filepath)
 
         print('Trained model saved!')
 
