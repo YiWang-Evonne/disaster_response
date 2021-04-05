@@ -3,6 +3,12 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    """
+    take the message and category data and then merge.
+    :param messages_filepath:  filepath for messages data
+    :param categories_filepath: filepath for category
+    :return:
+    """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     df = pd.merge(messages, categories, on=['id'])
@@ -10,6 +16,11 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    """
+    convert the categories to one hot encoding features.
+    :param df: input master df
+    :return: df with categories columns
+    """
     categories = df['categories'].str.split(";", expand=True)
     row = categories.head(1)
     category_colnames = row.apply(lambda x: x[0].split('-')[0])
@@ -27,11 +38,21 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    """
+    save data to spl db
+    :param df: master df
+    :param database_filename: target df name
+    :return:
+    """
     engine = create_engine("sqlite:///"+database_filename)
     df.to_sql('modeling_data', engine, if_exists='replace', index=False)
 
 
 def main():
+    """
+    CLI to call the data processing.
+    :return:
+    """
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]

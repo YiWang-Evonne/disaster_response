@@ -17,6 +17,11 @@ import pickle
 
 
 def load_data(database_filepath):
+    """
+    load data from sql db
+    :param database_filepath: sql db path
+    :return: pandas dataframe
+    """
     engine = create_engine("sqlite:///"+database_filepath)
     df = pd.read_sql_table('modeling_data', engine)
     yvar = [item for item in list(df) if item not in ['message', 'original', 'genre', 'id']]
@@ -26,6 +31,11 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """
+    processing the text input
+    :param text: text inputs
+    :return:
+    """
     url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     detected_urls = re.findall(url_regex, text)
     for url in detected_urls:
@@ -43,6 +53,10 @@ def tokenize(text):
 
 
 def build_model():
+    """
+    build model pipeline
+    :return: model pipeline
+    """
     model_pipeline = Pipeline([
         ('features', Pipeline([
             ('vect', CountVectorizer(tokenizer=tokenize)),
@@ -54,16 +68,35 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    evaluate model performances
+    :param model:  model obj
+    :param X_test:  test x
+    :param Y_test:  test y
+    :param category_names:  y names
+    :return:
+    """
     y_pred = model.predict(X_test)
     print(classification_report(Y_test, y_pred, target_names=category_names))
 
 
 def save_model(model, model_filepath):
+    """
+    save model to local path
+    :param model:  model obj
+    :param model_filepath:  saving path
+    :return:
+    """
     with open(model_filepath, 'wb') as f:
         pickle.dump(model, f)
 
 
 def main():
+    """
+    CLI to fit the model
+    :return:
+    """
+
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
